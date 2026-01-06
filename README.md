@@ -34,28 +34,22 @@ Portfolio de la filière Ingénierie du Web pour présenter des projets étudian
 
 1. **Cloner le repository**
 ```bash
-git clone git@github.com:isaidou/Projet-Airtable.git / git clone https://github.com/isaidou/Projet-Airtable.git
-cd Projet-Airtable
+git clone <votre-repo-url>
+cd 5IW1-Airtable
 ```
 
 2. **Créer le fichier `.env` à la racine du projet**
-
-   Copiez le fichier `.env.example` et renommez-le en `.env`, puis remplissez les valeurs :
-   ```bash
-   cp .env.example .env
-   ```
-
-   Ou créez manuellement le fichier `.env` avec les variables suivantes :
-   ```env
-   AIRTABLE_API_KEY=votre_api_key (crééé sur https://airtable.com/create/tokens)
-   BASE=app9S62PCTDqozObL
-   JWT_SECRET=votre_secret_jwt (openssl rand -base64 32)
-   PORT=3000
-   ```
+```env
+AIRTABLE_API_KEY=votre_api_key
+AIRTABLE_BASE_ID=votre_base_id
+JWT_SECRET=votre_secret_jwt
+FRONTEND_URL=http://localhost:2000
+PORT=3000
+```
 
 3. **Lancer avec Docker Compose**
 ```bash
-docker compose up -d
+docker-compose up
 ```
 
 Le projet sera accessible sur :
@@ -83,7 +77,6 @@ Le projet sera accessible sur :
 │   │   └── utils/              # Utilitaires
 │   └── server.js
 ├── docker-compose.yml
-├── .env.example
 └── .env
 ```
 
@@ -129,11 +122,11 @@ Le projet sera accessible sur :
 
 ### Accès à la base Airtable
 
-https://airtable.com/app9S62PCTDqozObL/shrgNJrW73vIxrMJI
+[Lien de partage Airtable en lecture seule]
 
 ## 👥 Membres du groupe
 
-- [À compléter avec les noms des membres]
+- [SAIDOU, OMER, FAEZ, JOHNNY]
 
 ## 🔐 Compte administrateur
 

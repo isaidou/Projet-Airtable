@@ -1,6 +1,5 @@
-const BASE_URL = 'http://localhost:3000/'
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/'
 
-// Récupérer le token depuis localStorage
 const getAuthToken = () => {
     const tokenString = localStorage.getItem('token');
     return tokenString ? `Bearer ${tokenString}` : null;
@@ -14,7 +13,6 @@ export async function httpRequest(url, options = {}) {
       ...options.headers,
     };
 
-    // Ajouter le token d'authentification si disponible
     if (token) {
       headers.Authorization = token;
     }
@@ -34,7 +32,12 @@ export async function httpRequest(url, options = {}) {
 
     return await response.json();
   } catch (error) {
-    throw error;
+    if (error.status) {
+      throw error;
+    }
+    const newError = new Error(error.message || "Une erreur réseau est survenue");
+    newError.status = error.status || 500;
+    throw newError;
   }
 }
 

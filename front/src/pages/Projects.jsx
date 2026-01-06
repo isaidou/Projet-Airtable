@@ -5,7 +5,6 @@ import { useGetProjects } from "../services/useGetProjects";
 import { postJson, putJson } from "../services/fetch.services";
 import { useAuth } from "../contexts/AuthContext";
 import ProjectCard from "../components/ProjectCard";
-import { useGetCategories } from "../services/useGetCategories";
 import { useGetTechnologies } from "../services/useGetTechnologies";
 import { useNotification } from "../contexts/NotificationContext";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -15,7 +14,6 @@ import Modal from "../components/Modal";
 export const Projects = () => {
     const { projects, getProjects, loading } = useGetProjects();
     const { userId, isAdmin, isAuthenticated } = useAuth();
-    const { categories } = useGetCategories();
     const { technologies } = useGetTechnologies();
     const { showNotification } = useNotification();
     const location = useLocation();

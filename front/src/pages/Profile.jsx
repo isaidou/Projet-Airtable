@@ -9,7 +9,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNotification } from "../contexts/NotificationContext";
 import { getJson, putJson, deleteJson } from "../services/fetch.services";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Edit, Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 
 export const Profile = () => {
     const { userId, logout } = useAuth();

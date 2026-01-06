@@ -453,4 +453,6 @@ app.delete('/comment', authenticate, requireAdmin, asyncHandler(async (req, res)
 app.use(errorHandler);
 
 app.listen(port, () => {
+    console.log(`🚀 Serveur démarré sur le port ${port}`);
+    console.log(`📡 API disponible sur http://localhost:${port}`);
 });

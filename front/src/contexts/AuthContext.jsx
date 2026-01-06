@@ -21,7 +21,6 @@ export const AuthProvider = ({ children }) => {
         const tokenString = res.token;
         const decoded = jwtDecode(tokenString);
         
-        // Stocker le token string pour l'envoyer dans les headers
         localStorage.setItem('token', tokenString);
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('isAdmin', decoded.isAdmin ? 'true' : 'false');
@@ -64,13 +63,11 @@ export const AuthProvider = ({ children }) => {
     setUserId(decoded.userId);
   };
 
-  // Vérifier le token au chargement
   useEffect(() => {
     const tokenString = localStorage.getItem('token');
     if (tokenString) {
       try {
         const decoded = jwtDecode(tokenString);
-        // Vérifier si le token est expiré
         if (decoded.exp * 1000 < Date.now()) {
           logout();
         } else {
