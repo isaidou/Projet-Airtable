@@ -39,17 +39,23 @@ cd 5IW1-Airtable
 ```
 
 2. **Créer le fichier `.env` à la racine du projet**
-```env
-AIRTABLE_API_KEY=votre_api_key
-AIRTABLE_BASE_ID=votre_base_id
-JWT_SECRET=votre_secret_jwt
-FRONTEND_URL=http://localhost:2000
-PORT=3000
-```
+
+   Copiez le fichier `.env.example` et renommez-le en `.env`, puis remplissez les valeurs :
+   ```bash
+   cp .env.example .env
+   ```
+
+   Ou créez manuellement le fichier `.env` avec les variables suivantes :
+   ```env
+   AIRTABLE_API_KEY=votre_api_key
+   BASE=votre_base_id
+   JWT_SECRET=votre_secret_jwt
+   PORT=3000
+   ```
 
 3. **Lancer avec Docker Compose**
 ```bash
-docker-compose up
+docker compose up -d
 ```
 
 Le projet sera accessible sur :
@@ -77,6 +83,7 @@ Le projet sera accessible sur :
 │   │   └── utils/              # Utilitaires
 │   └── server.js
 ├── docker-compose.yml
+├── .env.example
 └── .env
 ```
 
