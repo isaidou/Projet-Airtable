@@ -10,10 +10,10 @@ import Modal from "../components/Modal";
 import Input from "../components/Input";
 import { useNotification } from "../contexts/NotificationContext";
 import { useAuth } from "../contexts/AuthContext";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, Loader2 } from "lucide-react";
 
 export const Technologies = () => {
-    const { technologies, getTechnologies } = useGetTechnologies();
+    const { technologies, getTechnologies, loading } = useGetTechnologies();
     const { projects } = useGetProjects();
     const { showNotification } = useNotification();
     const { isAdmin } = useAuth();
@@ -97,6 +97,17 @@ export const Technologies = () => {
                 : project.technologies === selectedTech.id
         )
         : [];
+
+    if (loading) {
+        return (
+            <div className="container mx-auto px-4 py-8 max-w-6xl">
+                <div className="flex flex-col items-center justify-center py-16">
+                    <Loader2 className="animate-spin text-slate-900 mb-4" size={48} />
+                    <p className="text-slate-600 text-lg">Chargement des technologies...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-6xl">

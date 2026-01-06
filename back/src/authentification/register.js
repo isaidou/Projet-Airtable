@@ -29,12 +29,8 @@ async function register(fields) {
         }
 
         const sanitizedFields = {
-            ...remainingFields,
             first_name: sanitizeText(remainingFields.first_name || ''),
             last_name: sanitizeText(remainingFields.last_name || ''),
-            phone: remainingFields.phone ? sanitizeText(remainingFields.phone) : '',
-            address: remainingFields.address ? sanitizeText(remainingFields.address) : '',
-            formation_interest: remainingFields.formation_interest ? sanitizeText(remainingFields.formation_interest) : '',
         };
 
         const hashedPassword = await bcrypt.hash(password, 10);

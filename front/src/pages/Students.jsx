@@ -3,12 +3,12 @@ import { useGetStudents } from "../services/useGetStudents";
 import { useAuth } from "../contexts/AuthContext";
 import { deleteJson, putJson } from "../services/fetch.services";
 import { useNotification } from "../contexts/NotificationContext";
-import { Trash2, Shield, ShieldOff } from "lucide-react";
+import { Trash2, Shield, ShieldOff, Loader2 } from "lucide-react";
 import Modal from "../components/Modal";
 import { useState } from "react";
 
 export const Students = () => {
-    const { students, getStudents } = useGetStudents();
+    const { students, getStudents, loading } = useGetStudents();
     const { isAdmin } = useAuth();
     const { showNotification } = useNotification();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -40,11 +40,22 @@ export const Students = () => {
         }
     };
 
+    if (loading) {
+        return (
+            <div className="container mx-auto px-4 py-8 max-w-6xl">
+                <div className="flex flex-col items-center justify-center py-16">
+                    <Loader2 className="animate-spin text-slate-900 mb-4" size={48} />
+                    <p className="text-slate-600 text-lg">Chargement des utilisateurs...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="container mx-auto px-4 py-8 max-w-6xl">
             <div className="mb-8">
-                <h1 className="text-3xl font-semibold text-slate-900">Étudiants</h1>
-                <p className="text-slate-600 mt-2">{students.length} étudiant{students.length > 1 ? 's' : ''}</p>
+                <h1 className="text-3xl font-semibold text-slate-900">Utilisateurs</h1>
+                <p className="text-slate-600 mt-2">{students.length} utilisateur{students.length > 1 ? 's' : ''}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {students.map((student, index) => (

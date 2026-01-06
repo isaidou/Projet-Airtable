@@ -28,9 +28,6 @@ export const Register = () => {
                 password: data.password,
                 first_name: data.first_name,
                 last_name: data.last_name,
-                phone: data.phone || '',
-                address: data.address || '',
-                formation_interest: data.formation_interest || '',
             });
             setAuthFromToken(res.token);
             showNotification('Compte créé avec succès !', 'success');
@@ -80,30 +77,6 @@ export const Register = () => {
                                 label="Mot de passe"
                                 {...register('password')}
                                 error={errors.password?.message}
-                            />
-                        </div>
-                        <div>
-                            <Input
-                                placeholder="+33 6 12 34 56 78"
-                                label="Téléphone (optionnel)"
-                                {...register('phone')}
-                                error={errors.phone?.message}
-                            />
-                        </div>
-                        <div>
-                            <Input
-                                placeholder="123 Rue Example, 75001 Paris"
-                                label="Adresse (optionnel)"
-                                {...register('address')}
-                                error={errors.address?.message}
-                            />
-                        </div>
-                        <div>
-                            <Input
-                                placeholder="Formation qui vous intéresse"
-                                label="Formation d'intérêt (optionnel)"
-                                {...register('formation_interest')}
-                                error={errors.formation_interest?.message}
                             />
                         </div>
                         <div className="mt-6 space-y-3">

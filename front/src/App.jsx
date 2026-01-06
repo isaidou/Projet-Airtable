@@ -13,6 +13,8 @@ import { Register } from "./pages/Register";
 import { Students } from "./pages/Students";
 import { Technologies } from "./pages/Technologies";
 import { Profile } from "./pages/Profile";
+import { Contact } from "./pages/Contact";
+import { Contacts } from "./pages/Contacts";
 import LoadingBar from "./components/LoadingBar";
 import { Login } from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
@@ -40,8 +42,16 @@ function App() {
                                     element={<Login />}
                                 />
                                 <Route
+                                    path="contact"
+                                    element={<Contact />}
+                                />
+                                <Route
                                     path="students"
                                     element={<AdminRoute element={Students} />}
+                                />
+                                <Route
+                                    path="contacts"
+                                    element={<AdminRoute element={Contacts} />}
                                 />
                                 <Route
                                     path="categories"

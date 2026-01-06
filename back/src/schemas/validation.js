@@ -10,9 +10,6 @@ export const registerSchema = z.object({
     password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
     first_name: z.string().min(1, 'Prénom requis').max(100, 'Prénom trop long'),
     last_name: z.string().min(1, 'Nom requis').max(100, 'Nom trop long'),
-    phone: z.string().optional(),
-    address: z.string().optional(),
-    formation_interest: z.string().optional(),
 });
 
 export const updateUserSchema = z.object({
@@ -83,4 +80,14 @@ export const publishProjectSchema = z.object({
     publishing_status: z.enum(['publié', 'caché'], {
         errorMap: () => ({ message: 'Le statut doit être "publié" ou "caché"' }),
     }),
+});
+
+export const contactSchema = z.object({
+    first_name: z.string().min(1, 'Prénom requis').max(100, 'Prénom trop long'),
+    last_name: z.string().min(1, 'Nom requis').max(100, 'Nom trop long'),
+    email: z.string().email('Email invalide').min(1, 'Email requis'),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    formation_interest: z.string().optional(),
+    message: z.string().optional(),
 });

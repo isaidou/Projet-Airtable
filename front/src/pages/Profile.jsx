@@ -9,6 +9,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNotification } from "../contexts/NotificationContext";
 import { getJson, putJson, deleteJson } from "../services/fetch.services";
 import { useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 export const Profile = () => {
     const { userId, logout } = useAuth();
@@ -106,7 +107,10 @@ export const Profile = () => {
     if (loading) {
         return (
             <div className="container mx-auto px-4 py-8 max-w-4xl">
-                <div className="text-center text-slate-600">Chargement...</div>
+                <div className="flex flex-col items-center justify-center py-16">
+                    <Loader2 className="animate-spin text-slate-900 mb-4" size={48} />
+                    <p className="text-slate-600 text-lg">Chargement du profil...</p>
+                </div>
             </div>
         );
     }

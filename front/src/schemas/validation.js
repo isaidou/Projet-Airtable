@@ -10,9 +10,6 @@ export const registerSchema = z.object({
     password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
     first_name: z.string().min(1, 'Prénom requis'),
     last_name: z.string().min(1, 'Nom requis'),
-    phone: z.string().optional(),
-    address: z.string().optional(),
-    formation_interest: z.string().optional(),
 });
 
 export const profileSchema = z.object({
@@ -77,4 +74,14 @@ export const commentSchema = z.object({
 export const updateCommentSchema = z.object({
     id: z.string().min(1, 'ID requis'),
     comment: z.string().min(1, 'Le commentaire est requis').max(1000, 'Commentaire trop long'),
+});
+
+export const contactSchema = z.object({
+    first_name: z.string().min(1, 'Prénom requis'),
+    last_name: z.string().min(1, 'Nom requis'),
+    email: z.string().email('Email invalide').min(1, 'Email requis'),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    formation_interest: z.string().optional(),
+    message: z.string().optional(),
 });

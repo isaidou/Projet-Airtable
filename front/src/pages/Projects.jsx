@@ -9,11 +9,11 @@ import { useGetCategories } from "../services/useGetCategories";
 import { useGetTechnologies } from "../services/useGetTechnologies";
 import { useNotification } from "../contexts/NotificationContext";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, Plus } from "lucide-react";
+import { ChevronDown, Plus, Loader2, Search } from "lucide-react";
 import Modal from "../components/Modal";
 
 export const Projects = () => {
-    const { projects, getProjects } = useGetProjects();
+    const { projects, getProjects, loading } = useGetProjects();
     const { userId, isAdmin, isAuthenticated } = useAuth();
     const { categories } = useGetCategories();
     const { technologies } = useGetTechnologies();
@@ -177,9 +177,21 @@ export const Projects = () => {
                 <h1 className="text-4xl font-bold text-slate-900 mb-2">
                     Portfolio des étudiants
                 </h1>
-                <p className="text-base text-slate-600">
+                <p className="text-base text-slate-600 mb-6">
                     Découvrez les projets et réalisations des étudiants
                 </p>
+                <div className="max-w-2xl mx-auto">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Rechercher un projet par nom, description, technologie..."
+                            className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="bg-white sticky top-16 z-40">
@@ -279,7 +291,12 @@ export const Projects = () => {
             </div>
 
             <div className="container mx-auto px-4 pb-16 pt-4">
-                {filteredProjects.length > 0 ? (
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-16">
+                        <Loader2 className="animate-spin text-slate-900 mb-4" size={48} />
+                        <p className="text-slate-600 text-lg">Chargement des projets...</p>
+                    </div>
+                ) : filteredProjects.length > 0 ? (
                     <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4">
                         {filteredProjects.map((proj, index) => {
                             const hasAlreadyLiked = proj?.likes?.includes(userId);

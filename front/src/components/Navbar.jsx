@@ -13,7 +13,8 @@ const Navbar = () => {
     const adminLinks = [
         { label: 'Technologies', path: '/technologies' },
         { label: 'Catégories', path: '/categories' },
-        { label: 'Étudiants', path: '/students' },
+        { label: 'Utilisateurs', path: '/students' },
+        { label: 'Contacts', path: '/contacts' },
     ];
 
     const handleSearch = (e) => {
@@ -65,6 +66,18 @@ const Navbar = () => {
                                 {link.label}
                             </button>
                         ))}
+                        {!isAdmin && (
+                            <button
+                                onClick={() => navigate('/contact')}
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                                    location.pathname === '/contact'
+                                        ? 'bg-slate-900 text-white'
+                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                                }`}
+                            >
+                                Contact
+                            </button>
+                        )}
                         {isAuthenticated ? (
                             <>
                                 <button
@@ -134,6 +147,18 @@ const Navbar = () => {
                                 {link.label}
                             </button>
                         ))}
+                        {!isAdmin && (
+                            <button
+                                onClick={() => { setMenuOpen(false); navigate('/contact'); }}
+                                className={`block w-full text-left px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                                    location.pathname === '/contact'
+                                        ? 'bg-slate-900 text-white'
+                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                                }`}
+                            >
+                                Contact
+                            </button>
+                        )}
                         {isAuthenticated ? (
                             <>
                                 <button

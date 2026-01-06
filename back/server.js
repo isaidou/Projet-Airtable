@@ -9,7 +9,7 @@ import { create } from './src/bdd/CRUD/create.js';
 import { update } from './src/bdd/CRUD/update.js';
 import { destroy } from './src/bdd/CRUD/destroy.js';
 import { checkIdsExistence, toArray, retrieveLinkedDetails } from './src/utils/utils.bdd.js';
-import { sanitizeId, sanitizeUrl, sanitizeText } from './src/utils/sanitize.js';
+import { sanitizeId, sanitizeUrl, sanitizeText, sanitizeEmail } from './src/utils/sanitize.js';
 import { authenticate, requireAdmin } from './src/middleware/auth.middleware.js';
 import { validate } from './src/middleware/validate.middleware.js';
 import { errorHandler, asyncHandler } from './src/middleware/errorHandler.middleware.js';
@@ -28,6 +28,7 @@ import {
     updateCommentSchema,
     likeProjectSchema,
     publishProjectSchema,
+    contactSchema,
 } from './src/schemas/validation.js';
 
 const app = express();
@@ -42,6 +43,47 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
+
+app.post('/contact', validate(contactSchema), asyncHandler(async (req, res) => {
+    const { first_name, last_name, email, phone, address, formation_interest, message } = req.body;
+    
+    const contactData = {
+        first_name: sanitizeText(first_name),
+        last_name: sanitizeText(last_name),
+        email: sanitizeEmail(email),
+        phone: phone ? sanitizeText(phone) : '',
+        address: address ? sanitizeText(address) : '',
+        formation_interest: formation_interest ? sanitizeText(formation_interest) : '',
+        message: message ? sanitizeText(message) : '',
+        status: 'nouveau'
+    };
+
+    const data = await create('Contacts', contactData);
+    res.send({ success: true, message: 'Votre demande a été envoyée avec succès !', data });
+}));
+
+app.get('/contact', authenticate, requireAdmin, asyncHandler(async (req, res) => {
+    const data = await retrieve('Contacts');
+    res.send(data);
+}));
+
+app.put('/contact', authenticate, requireAdmin, asyncHandler(async (req, res) => {
+    const { id, status } = req.body;
+
+    if (!id) {
+        throw new Error("Un ID est obligatoire pour mettre à jour le contact");
+    }
+
+    await checkIdsExistence('Contacts', id);
+
+    const data = await update('Contacts', [{
+        id: sanitizeId(id),
+        fields: {
+            status: status || 'nouveau'
+        }
+    }]);
+    res.send(data);
+}));
 
 app.post('/user', validate(registerSchema), asyncHandler(async (req, res) => {
     const data = await register(req.body);
