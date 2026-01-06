@@ -101,7 +101,7 @@ app.get('/user', authenticate, asyncHandler(async (req, res) => {
 }));
 
 app.put('/user', authenticate, validate(updateUserSchema), asyncHandler(async (req, res) => {
-    const { id, email, password, first_name, last_name, phone, address, formation_interest } = req.body;
+    const { id, email, password, first_name, last_name, phone, address } = req.body;
 
     if (req.user.userId !== id && !req.user.isAdmin) {
         return res.status(403).json({ error: 'Vous ne pouvez modifier que votre propre compte' });
@@ -115,7 +115,6 @@ app.put('/user', authenticate, validate(updateUserSchema), asyncHandler(async (r
     if (last_name) updateData.last_name = sanitizeText(last_name);
     if (phone !== undefined) updateData.phone = phone ? sanitizeText(phone) : '';
     if (address !== undefined) updateData.address = address ? sanitizeText(address) : '';
-    if (formation_interest !== undefined) updateData.formation_interest = formation_interest ? sanitizeText(formation_interest) : '';
     if (password) {
         updateData.password = await bcrypt.hash(password, 10);
     }

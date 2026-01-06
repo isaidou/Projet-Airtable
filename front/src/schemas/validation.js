@@ -18,7 +18,6 @@ export const profileSchema = z.object({
     last_name: z.string().min(1, 'Nom requis'),
     phone: z.string().optional(),
     address: z.string().optional(),
-    formation_interest: z.string().optional(),
     password: z.string().optional(),
     confirmPassword: z.string().optional(),
 }).refine((data) => {

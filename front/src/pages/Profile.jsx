@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema } from "../schemas/validation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "../components/Button";
 import Input from "../components/Input";
 import Modal from "../components/Modal";
@@ -9,7 +9,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNotification } from "../contexts/NotificationContext";
 import { getJson, putJson, deleteJson } from "../services/fetch.services";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, Edit, Trash2 } from "lucide-react";
 
 export const Profile = () => {
     const { userId, logout } = useAuth();
@@ -20,6 +20,7 @@ export const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const formRef = useRef(null);
 
     const {
         register,
@@ -49,7 +50,6 @@ export const Profile = () => {
                     last_name: currentUser.last_name || '',
                     phone: currentUser.phone || '',
                     address: currentUser.address || '',
-                    formation_interest: currentUser.formation_interest || '',
                     password: '',
                     confirmPassword: '',
                 });
@@ -70,7 +70,6 @@ export const Profile = () => {
                 last_name: data.last_name,
                 phone: data.phone || '',
                 address: data.address || '',
-                formation_interest: data.formation_interest || '',
             };
 
             if (data.password && data.password.length > 0) {
@@ -124,27 +123,116 @@ export const Profile = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-            <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-8">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-semibold text-slate-900">Mon Profil</h1>
-                    {!isEditing && (
-                        <div className="flex gap-3">
-                            <Button
-                                label="Modifier"
-                                onClick={() => setIsEditing(true)}
-                            />
-                            <Button
-                                label="Supprimer"
-                                onClick={() => setShowDeleteModal(true)}
-                                color="danger"
-                            />
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold text-slate-900 mb-2">Profile</h1>
+                <p className="text-slate-600">View all your profile details here.</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                    <div className="lg:col-span-1 flex">
+                        <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6 flex flex-col w-full">
+                            <div className="flex flex-col items-center text-center mb-6">
+                                <div className="w-24 h-24 rounded-full bg-slate-200 flex items-center justify-center mb-4">
+                                    <span className="text-3xl font-bold text-slate-700">
+                                        {user.first_name?.[0]?.toUpperCase() || 'U'}
+                                    </span>
+                                </div>
+                                <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                                    {user.first_name} {user.last_name}
+                                </h2>
+                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                    user.is_admin 
+                                        ? 'bg-slate-900 text-white' 
+                                        : 'bg-slate-100 text-slate-700'
+                                }`}>
+                                    {user.is_admin ? 'Administrateur' : 'Utilisateur'}
+                                </span>
+                            </div>
+                            <div className="flex gap-2 mt-auto">
+                                <Button
+                                    label="Modifier"
+                                    onClick={() => setIsEditing(true)}
+                                    className="flex-1"
+                                />
+                                <button
+                                    onClick={() => setShowDeleteModal(true)}
+                                    className="px-4 py-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-md transition-colors border border-red-200"
+                                    title="Supprimer"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
+                            </div>
                         </div>
-                    )}
+                    </div>
+
+                    <div className="lg:col-span-2 flex">
+                        <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6 flex flex-col w-full">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-lg font-semibold text-slate-900">Informations personnelles</h3>
+                            </div>
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                                    <div className="flex-1">
+                                        <label className="text-sm font-medium text-slate-600">Nom</label>
+                                        <p className="text-slate-900 mt-1">{user.last_name || '-'}</p>
+                                    </div>
+                                    <div className="flex-1">
+                                        <label className="text-sm font-medium text-slate-600">Prénom</label>
+                                        <p className="text-slate-900 mt-1">{user.first_name || '-'}</p>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                                    <div className="flex-1">
+                                        <label className="text-sm font-medium text-slate-600">Email</label>
+                                        <p className="text-slate-900 mt-1">{user.email}</p>
+                                    </div>
+                                    <div className="flex-1">
+                                        <label className="text-sm font-medium text-slate-600">Téléphone</label>
+                                        <p className="text-slate-900 mt-1">{user.phone || '-'}</p>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                                    <div className="flex-1">
+                                        <label className="text-sm font-medium text-slate-600">Adresse</label>
+                                        <p className="text-slate-900 mt-1">{user.address || '-'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {isEditing ? (
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <Modal
+                isOpen={isEditing}
+                onClose={() => {
+                    setIsEditing(false);
+                    loadUserData();
+                }}
+                title="Modifier mon profil"
+                actions={
+                    <>
+                        <Button
+                            label="Annuler"
+                            onClick={() => {
+                                setIsEditing(false);
+                                loadUserData();
+                            }}
+                            color="outline"
+                            type="button"
+                        />
+                        <Button
+                            label="Enregistrer"
+                            onClick={() => formRef.current?.requestSubmit()}
+                            disabled={isSubmitting}
+                            color="success"
+                            type="button"
+                        />
+                    </>
+                }
+            >
+                <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Input
                             label="Email"
                             type="email"
@@ -176,14 +264,10 @@ export const Profile = () => {
                             {...register('address')}
                             error={errors.address?.message}
                         />
-                        <Input
-                            label="Formation d'intérêt"
-                            placeholder="Formation qui vous intéresse"
-                            {...register('formation_interest')}
-                            error={errors.formation_interest?.message}
-                        />
-                        <div className="border-t border-slate-200 pt-6">
-                            <h3 className="text-lg font-semibold text-slate-900 mb-4">Changer le mot de passe (optionnel)</h3>
+                    </div>
+                    <div className="border-t border-slate-200 pt-6">
+                        <h3 className="text-lg font-semibold text-slate-900 mb-4">Changer le mot de passe (optionnel)</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <Input
                                 label="Nouveau mot de passe"
                                 type="password"
@@ -199,75 +283,9 @@ export const Profile = () => {
                                 error={errors.confirmPassword?.message}
                             />
                         </div>
-                        <div className="flex gap-3">
-                            <Button
-                                label="Enregistrer"
-                                type="submit"
-                                disabled={isSubmitting}
-                                color="success"
-                            />
-                            <Button
-                                label="Annuler"
-                                onClick={() => {
-                                    setIsEditing(false);
-                                    loadUserData();
-                                }}
-                                color="outline"
-                                type="button"
-                            />
-                        </div>
-                    </form>
-                ) : (
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-600 mb-1">Email</label>
-                                <p className="text-slate-900">{user.email}</p>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-slate-600 mb-1">Prénom</label>
-                                <p className="text-slate-900">{user.first_name}</p>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-slate-600 mb-1">Nom</label>
-                                <p className="text-slate-900">{user.last_name}</p>
-                            </div>
-                            {user.phone && (
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-600 mb-1">Téléphone</label>
-                                    <p className="text-slate-900">{user.phone}</p>
-                                </div>
-                            )}
-                            {user.address && (
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-600 mb-1">Adresse</label>
-                                    <p className="text-slate-900">{user.address}</p>
-                                </div>
-                            )}
-                            {user.formation_interest && (
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-600 mb-1">Formation d'intérêt</label>
-                                    <p className="text-slate-900">{user.formation_interest}</p>
-                                </div>
-                            )}
-                            <div>
-                                <label className="block text-sm font-medium text-slate-600 mb-1">Statut</label>
-                                <p className="text-slate-900">
-                                    {user.is_admin ? (
-                                        <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-slate-900 text-white">
-                                            Administrateur
-                                        </span>
-                                    ) : (
-                                        <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-slate-100 text-slate-700">
-                                            Utilisateur
-                                        </span>
-                                    )}
-                                </p>
-                            </div>
-                        </div>
                     </div>
-                )}
-            </div>
+                </form>
+            </Modal>
 
             <Modal
                 isOpen={showDeleteModal}

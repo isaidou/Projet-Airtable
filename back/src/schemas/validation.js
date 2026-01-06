@@ -19,7 +19,6 @@ export const updateUserSchema = z.object({
     last_name: z.string().min(1).max(100).optional(),
     phone: z.string().optional(),
     address: z.string().optional(),
-    formation_interest: z.string().optional(),
     password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères').optional(),
 });
 

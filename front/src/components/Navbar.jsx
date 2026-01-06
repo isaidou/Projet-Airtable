@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Menu, X, Search, User } from 'lucide-react';
+import { Menu, X, Search, User, Code2 } from 'lucide-react';
 
 const Navbar = () => {
     const { isAuthenticated, logout, isAdmin } = useAuth();
@@ -31,10 +31,11 @@ const Navbar = () => {
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-16 gap-4">
                     <div
-                        className="text-xl font-bold text-slate-900 cursor-pointer select-none flex-shrink-0"
+                        className="text-xl font-bold text-slate-900 cursor-pointer select-none flex-shrink-0 flex items-center gap-2"
                         onClick={() => navigate('/')}
                     >
-                        Portfolio
+                        <Code2 size={24} />
+                        IW Portfolio
                     </div>
 
                     {isAuthenticated && (
@@ -75,7 +76,7 @@ const Navbar = () => {
                                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                                 }`}
                             >
-                                Contact
+                                Nous contacter
                             </button>
                         )}
                         {isAuthenticated ? (
@@ -156,7 +157,7 @@ const Navbar = () => {
                                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                                 }`}
                             >
-                                Contact
+                                Nous contacter
                             </button>
                         )}
                         {isAuthenticated ? (

@@ -11,7 +11,7 @@ import { useGetTechnologies } from '../services/useGetTechnologies';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNotification } from '../contexts/NotificationContext';
 import { z } from 'zod';
-import { Trash2, MessageCircle } from 'lucide-react';
+import { Trash2, MessageCircle, User } from 'lucide-react';
 
 const ProjectModal = ({ isOpen, onClose, onSuccess, project = null }) => {
     const { isAdmin, userId, isAuthenticated } = useAuth();
@@ -348,7 +348,37 @@ const ProjectModal = ({ isOpen, onClose, onSuccess, project = null }) => {
             ) : null}
             
             {!isAdmin && project && (
-                <div className="space-y-6">
+                <div className="space-y-4">
+                    <div className="flex items-center gap-2 flex-wrap text-sm text-slate-600">
+                        <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center">
+                                <User size={12} className="text-slate-500" />
+                            </div>
+                            <span className=" text-slate-900">
+                                {project?.created_by || 'Auteur inconnu'}
+                            </span>
+                        </div>
+                        {project?.project_link && (
+                            <>
+                                <span>·</span>
+                                <a 
+                                    href={project.project_link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="text-slate-600 hover:text-slate-900 hover:underline"
+                                >
+                                    {project.project_link}
+                                </a>
+                            </>
+                        )}
+                        {project?.categoryDetails?.[0] && (
+                            <>
+                                <span>·</span>
+                                <span>{project.categoryDetails[0].category_name}</span>
+                            </>
+                        )}
+                    </div>
+
                     {project?.image?.[0]?.url && (
                         <div className="mb-4">
                             <img
@@ -358,97 +388,87 @@ const ProjectModal = ({ isOpen, onClose, onSuccess, project = null }) => {
                             />
                         </div>
                     )}
-                    
-                    <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0"></div>
-                            <span className="text-sm font-semibold text-slate-900">
-                                {project?.created_by || 'Auteur inconnu'}
-                            </span>
+
+                    {project?.description && (
+                        <div>
+                            <p className="text-slate-900 whitespace-pre-wrap leading-relaxed">{project.description}</p>
                         </div>
-                        <h2 className="text-lg font-semibold text-slate-900 mb-2">{project?.name}</h2>
-                        {project?.project_link && (
-                            <a 
-                                href={project.project_link} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="text-sm text-slate-600 hover:text-slate-900 hover:underline mb-3 inline-block"
-                            >
-                                {project.project_link}
-                            </a>
-                        )}
-                        <p className="text-slate-900 whitespace-pre-wrap mb-2">{project?.description}</p>
-                        <div className="flex items-center gap-4 text-sm text-slate-600 mb-4">
-                            <span>Catégorie: {project?.categoryDetails?.[0]?.category_name}</span>
-                        </div>
-                    </div>
+                    )}
                 </div>
             )}
             
             {project && (
                 <div className="border-t border-slate-200 pt-6 mt-6">
                     <div className="flex items-center gap-2 mb-4">
-                        <MessageCircle size={18} className="text-slate-600" />
-                        <span className="text-sm font-medium text-slate-900">
+                        <MessageCircle size={18} className="text-indigo-600" />
+                        <span className="text-sm font-semibold text-slate-900">
                             {project?.commentsDetails?.length || 0} commentaire{project?.commentsDetails?.length !== 1 ? 's' : ''}
                         </span>
                     </div>
                     
                     {project?.commentsDetails && project.commentsDetails.length > 0 ? (
-                        <ul className="space-y-4 mb-4">
+                        <ul className="space-y-3 mb-4">
                             {project.commentsDetails.map((comment, idx) => (
-                                <li key={idx} className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100 last:border-0">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <div className="w-6 h-6 rounded-full bg-slate-200 flex-shrink-0"></div>
-                                            <span className="text-sm font-semibold text-slate-900">
-                                                {comment.userDetails && comment.userDetails.first_name && comment.userDetails.last_name
-                                                    ? `${comment.userDetails.first_name} ${comment.userDetails.last_name}`
-                                                    : 'Anonyme'}
-                                            </span>
+                                <li key={idx} className="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-7 h-7 rounded-full bg-indigo-200 flex-shrink-0 flex items-center justify-center text-indigo-700 font-semibold text-xs">
+                                                    {comment.userDetails && comment.userDetails.first_name
+                                                        ? comment.userDetails.first_name[0].toUpperCase()
+                                                        : 'A'}
+                                                </div>
+                                                <span className="text-sm font-semibold text-slate-900">
+                                                    {comment.userDetails && comment.userDetails.first_name && comment.userDetails.last_name
+                                                        ? `${comment.userDetails.first_name} ${comment.userDetails.last_name}`
+                                                        : 'Anonyme'}
+                                                </span>
+                                            </div>
+                                            <p className="text-slate-700 text-sm ml-9 leading-relaxed">{comment.comment}</p>
                                         </div>
-                                        <p className="text-slate-700 text-sm ml-8">{comment.comment}</p>
+                                        {isAdmin && (
+                                            <button
+                                                onClick={() => handleDeleteComment(comment.id)}
+                                                className="p-1.5 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-md transition-colors flex-shrink-0"
+                                                title="Supprimer le commentaire"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        )}
                                     </div>
-                                    {isAdmin && (
-                                        <button
-                                            onClick={() => handleDeleteComment(comment.id)}
-                                            className="p-1.5 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-md transition-colors flex-shrink-0"
-                                            title="Supprimer le commentaire"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
-                                    )}
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p className="text-slate-500 text-sm mb-4">Aucun commentaire pour le moment.</p>
+                        <p className="text-slate-500 text-sm mb-4 text-center py-4 bg-slate-50 rounded-lg border border-slate-100">Aucun commentaire pour le moment.</p>
                     )}
 
                     {isAuthenticated && project?.id && (
-                        <form onSubmit={handleSubmitComment(onSubmitComment)}>
-                            <div>
-                                <textarea
-                                    {...registerComment('comment')}
-                                    placeholder="Ajouter un commentaire..."
-                                    className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-colors resize-none ${
-                                        errorsComment.comment ? 'border-red-500' : 'border-slate-300'
-                                    }`}
-                                    rows={3}
-                                />
-                                {errorsComment.comment && (
-                                    <p className="text-red-600 text-sm mt-1">{errorsComment.comment.message}</p>
-                                )}
-                            </div>
-                            <div className="mt-2">
-                                <Button
-                                    label={isSubmittingComment ? "Publication..." : "Publier"}
-                                    type="submit"
-                                    disabled={isSubmittingComment}
-                                    className="text-sm"
-                                />
-                            </div>
-                        </form>
+                        <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-100">
+                            <form onSubmit={handleSubmitComment(onSubmitComment)}>
+                                <div>
+                                    <textarea
+                                        {...registerComment('comment')}
+                                        placeholder="Ajouter un commentaire..."
+                                        className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors resize-none bg-white ${
+                                            errorsComment.comment ? 'border-red-500' : 'border-indigo-200'
+                                        }`}
+                                        rows={3}
+                                    />
+                                    {errorsComment.comment && (
+                                        <p className="text-red-600 text-sm mt-1">{errorsComment.comment.message}</p>
+                                    )}
+                                </div>
+                                <div className="mt-3">
+                                    <Button
+                                        label={isSubmittingComment ? "Publication..." : "Publier"}
+                                        type="submit"
+                                        disabled={isSubmittingComment}
+                                        className="text-sm"
+                                    />
+                                </div>
+                            </form>
+                        </div>
                     )}
                 </div>
             )}

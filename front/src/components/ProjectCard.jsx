@@ -12,8 +12,6 @@ export default function ProjectCard({
 }) {
     const { isAdmin } = useAuth();
 
-    const authorDisplay = project.created_by || 'Auteur inconnu';
-
     const imageUrl = project.image && project.image[0] && project.image[0].url;
     const likesCount = Array.isArray(project.likes) ? project.likes.length : 0;
     const commentsCount = Array.isArray(project.commentsDetails) ? project.commentsDetails.length : 0;
@@ -55,13 +53,7 @@ export default function ProjectCard({
 
             <div className="flex items-start justify-between gap-4 pt-1.5">
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                        <div className="w-6 h-6 rounded-full bg-slate-200 flex-shrink-0"></div>
-                        <span className="text-sm font-medium text-slate-900 truncate">
-                            {authorDisplay}
-                        </span>
-                    </div>
-                    <h3 className="text-sm text-slate-600 truncate font-medium">
+                    <h3 className="text-sm font-medium text-slate-900 truncate">
                         {project.name}
                     </h3>
                 </div>
