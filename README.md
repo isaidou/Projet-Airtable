@@ -34,8 +34,8 @@ Portfolio de la filière Ingénierie du Web pour présenter des projets étudian
 
 1. **Cloner le repository**
 ```bash
-git clone <votre-repo-url>
-cd 5IW1-Airtable
+git clone git@github.com:isaidou/Projet-Airtable.git / git clone https://github.com/isaidou/Projet-Airtable.git
+cd Projet-Airtable
 ```
 
 2. **Créer le fichier `.env` à la racine du projet**
@@ -47,9 +47,9 @@ cd 5IW1-Airtable
 
    Ou créez manuellement le fichier `.env` avec les variables suivantes :
    ```env
-   AIRTABLE_API_KEY=votre_api_key
-   BASE=votre_base_id
-   JWT_SECRET=votre_secret_jwt
+   AIRTABLE_API_KEY=votre_api_key (crééé sur https://airtable.com/create/tokens)
+   BASE=app9S62PCTDqozObL
+   JWT_SECRET=votre_secret_jwt (openssl rand -base64 32)
    PORT=3000
    ```
 
@@ -129,7 +129,7 @@ Le projet sera accessible sur :
 
 ### Accès à la base Airtable
 
-[Lien de partage Airtable en lecture seule]
+https://airtable.com/app9S62PCTDqozObL/shrgNJrW73vIxrMJI
 
 ## 👥 Membres du groupe
 
